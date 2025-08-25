@@ -11,11 +11,11 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.frames["idle"][0]
         self.rect = self.image.get_frect(midbottom = (WINDOW_WIDTH // 2, WINDOW_HEIGHT - 64))
-        
+
         # Hitbox for pixelperfect Collision
-        hitbox_w, hitbox_h = 36, 54
+        hitbox_w, hitbox_h = 30, 54 # 36,54
         self.hitbox = pygame.FRect(0,0, hitbox_w, hitbox_h)
-        self.hitbox.midbottom = self.rect.midbottom # Benötigt?
+        self.hitbox.midbottom = self.rect.midbottom # Connect Renderrect and Colliderect
 
         self.velocity_x = 0
         self.velocity_y = 0
@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
                 self.jump_direction = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
             elif not self.charging_jump:
                 self.direction = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
-                self.rect.x += self.direction * PLAYER_SPEED *dt
+                self.hitbox.x += self.direction * PLAYER_SPEED *dt
         #print(f"Jump Power: {self.jump_power}, Jump Direction: {self.jump_direction}")
 
 
@@ -60,38 +60,36 @@ class Player(pygame.sprite.Sprite):
 
     def handle_collisions(self,direction):
         for sprite in self.collision_sprites:
-            if sprite.rect.colliderect(self.rect):
+            if sprite.rect.colliderect(self.hitbox):
                 if direction == "horizontal":
                     if self.velocity_x > 0: 
-                        self.rect.right = sprite.rect.left
+                        self.hitbox.right = sprite.rect.left
                     elif self.velocity_x < 0:
-                        self.rect.left = sprite.rect.right
+                        self.hitbox.left = sprite.rect.right
                     self.velocity_x = 0
                 elif direction == "vertical":
                     if self.velocity_y > 0:
-                        self.rect.bottom = sprite.rect.top
-                        #self.rect.y = round(self.rect.y) # Addon!
+                        self.hitbox.bottom = sprite.rect.top
                         self.velocity_y = 0
                         self.velocity_x = 0
                         self.on_ground = True
                     elif self.velocity_y < 0:
-                        self.rect.top = sprite.rect.bottom
-                        #self.rect.y = round(self.rect.y) #Addon!
+                        self.hitbox.top = sprite.rect.bottom
                         self.velocity_y = 0
 
 
     def move(self, dt):
-        #if not self.on_ground: # Lieber immer anwenden?
         self.velocity_y += GRAVITY * dt
 
-        self.rect.x += self.velocity_x * dt
+        self.hitbox.x += self.velocity_x * dt
         self.handle_collisions("horizontal")
 
         if self.velocity_y != 0: 
-            self.rect.y += self.velocity_y * dt
+            self.hitbox.y += self.velocity_y * dt
             self.on_ground = False
             self.handle_collisions("vertical")
-    
+
+        self.rect.midbottom = self.hitbox.midbottom # Reconnect Renderrect and Colliderect -> Movement from Renderrect
 
     def animate(self, dt):
         if not self.on_ground:
@@ -117,14 +115,7 @@ class Player(pygame.sprite.Sprite):
         
         self.image = pygame.transform.flip(self.image, True, False) if flip else self.image
 
-    def check_if_on_ground(self):
-        if self.on_ground:
-            one_pixel_below = self.rect.move(0, 1)
-            if not any(sprite.rect.colliderect(one_pixel_below) for sprite in self.collision_sprites):
-                self.on_ground = False
-
     def update(self, dt):
         self.input(dt)
         self.move(dt)
-        #self.check_if_on_ground() # Wird nicht benötigt
         self.animate(dt)

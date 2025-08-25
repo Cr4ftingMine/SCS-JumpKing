@@ -13,17 +13,20 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(midbottom = (WINDOW_WIDTH // 2, WINDOW_HEIGHT - 64))
 
         # Hitbox for pixelperfect Collision
-        hitbox_w, hitbox_h = 30, 54 # 36,54
+        hitbox_w, hitbox_h = 30, 54 # 30,54
         self.hitbox = pygame.FRect(0,0, hitbox_w, hitbox_h)
         self.hitbox.midbottom = self.rect.midbottom # Connect Renderrect and Colliderect
 
+        # Kinematics
         self.velocity_x = 0
         self.velocity_y = 0
+
+        # Input-/State
+        self.direction = 0 # Direction if on_ground: 1 for right, -1 for left
         self.jump_power = 0
         self.jump_direction = 0
         self.on_ground = True
         self.charging_jump = False
-        self.direction = 0 # 1 for right, -1 for left
 
         self.collision_sprites = collision_sprites
 
@@ -37,17 +40,40 @@ class Player(pygame.sprite.Sprite):
             "jump": [load("player_jump.png")]
         }
 
+    # !TODO Arbeitet an Events und steuert diese 
+    def event_handler(self, event): 
+        if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+            self.release_jump()
+
     def input(self,dt):
         keys = pygame.key.get_pressed()
+
+        #Horizontal Directions (only "Groundlevel")
+        self.direction = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
         if self.on_ground:
             if keys[pygame.K_SPACE]:
                 self.charging_jump = True
                 self.jump_power = min(self.jump_power + JUMP_CHARGE_RATE *dt, MAX_JUMP_POWER)
                 self.jump_direction = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
-            elif not self.charging_jump:
-                self.direction = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
-                self.hitbox.x += self.direction * PLAYER_SPEED *dt
         #print(f"Jump Power: {self.jump_power}, Jump Direction: {self.jump_direction}")
+
+    def move(self, dt):
+        # 1) Horizontal movement + Kollision
+        if self.on_ground:
+            if not self.charging_jump:
+                self.hitbox.x += self.direction * PLAYER_SPEED * dt
+        else: 
+            self.hitbox.x += self.velocity_x * dt
+        self.handle_collisions("horizontal")
+
+        # 2) Vertical movement + Kollision
+        self.velocity_y += GRAVITY * dt
+        self.hitbox.y += self.velocity_y * dt
+        self.on_ground = False
+        self.handle_collisions("vertical")
+
+        # Reconnect Renderrect and Colliderect -> Movement from Renderrect
+        self.rect.midbottom = self.hitbox.midbottom 
 
 
     def release_jump(self):
@@ -61,13 +87,7 @@ class Player(pygame.sprite.Sprite):
     def handle_collisions(self,direction):
         for sprite in self.collision_sprites:
             if sprite.rect.colliderect(self.hitbox):
-                if direction == "horizontal":
-                    if self.velocity_x > 0: 
-                        self.hitbox.right = sprite.rect.left
-                    elif self.velocity_x < 0:
-                        self.hitbox.left = sprite.rect.right
-                    self.velocity_x = 0
-                elif direction == "vertical":
+                if direction == "vertical":
                     if self.velocity_y > 0:
                         self.hitbox.bottom = sprite.rect.top
                         self.velocity_y = 0
@@ -77,19 +97,21 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.top = sprite.rect.bottom
                         self.velocity_y = 0
 
+#!TODO: Doppelbounce möglich? Im Spiel auch unterstützt?
+                elif direction == "horizontal":
+                    if self.velocity_x > 0: 
+                        self.hitbox.right = sprite.rect.left
 
-    def move(self, dt):
-        self.velocity_y += GRAVITY * dt
+                        # Wall Bounce - Right into wall
+                        self.velocity_x = -PLAYER_SPEED * 0.5
+                        self.velocity_y = max(self.velocity_y, -200)
 
-        self.hitbox.x += self.velocity_x * dt
-        self.handle_collisions("horizontal")
+                    elif self.velocity_x < 0:
+                        self.hitbox.left = sprite.rect.right
 
-        if self.velocity_y != 0: 
-            self.hitbox.y += self.velocity_y * dt
-            self.on_ground = False
-            self.handle_collisions("vertical")
-
-        self.rect.midbottom = self.hitbox.midbottom # Reconnect Renderrect and Colliderect -> Movement from Renderrect
+                        # Wall Bounce - Left into wall
+                        self.velocity_x = PLAYER_SPEED * 0.5
+                        self.velocity_y = max(self.velocity_y, -200)
 
     def animate(self, dt):
         if not self.on_ground:

@@ -48,14 +48,13 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-
-                # TODO: Eventhandling sollte glaube eher im Player-Objekt sein
-                if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
-                    self.player.release_jump()
+                else: 
+                    self.player.event_handler(event) 
 
             self.all_sprites.update(dt) # Update all sprites
             self.all_sprites.draw(self.display_surface)
             self.debug_draw_grid()
+            print(f"Velocity x: {self.player.velocity_x}, Velocity y: {self.player.velocity_y}")
             pygame.display.update()  # Update the display
 
         pygame.quit()

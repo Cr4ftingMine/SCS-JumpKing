@@ -99,14 +99,17 @@ class Player(pygame.sprite.Sprite):
 
 #!TODO: Doppelbounce möglich? Im Spiel auch unterstützt?
                 elif direction == "horizontal":
-                    if self.velocity_x > 0: 
+                    move_dir = self.velocity_x if not self.on_ground else self.direction
+                    #if self.velocity_x > 0:
+                    if move_dir > 0: 
                         self.hitbox.right = sprite.rect.left
 
                         # Wall Bounce - Right into wall
                         self.velocity_x = -PLAYER_SPEED * 0.5
                         self.velocity_y = max(self.velocity_y, -200)
 
-                    elif self.velocity_x < 0:
+                    #elif self.velocity_x < 0:
+                    elif move_dir < 0:
                         self.hitbox.left = sprite.rect.right
 
                         # Wall Bounce - Left into wall

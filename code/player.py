@@ -140,6 +140,29 @@ class Player(pygame.sprite.Sprite):
         
         self.image = pygame.transform.flip(self.image, True, False) if flip else self.image
 
+    def draw_charge_bar(self, surface, camera):
+        # Show only when charging or midjump
+        if not self.charging_jump and self.jump_power <= 0:
+            return
+
+        screen_rect = self.rect.move(0, camera.offset.y)
+        width, height = 60, 8
+        gap = -10 # Extra space between player and bar (on top of rect.top)
+        bg_color, fg_color, border_color = (40, 40, 40), (80, 200, 120), (0, 0, 0) # background color, filling color, border color
+
+        # Position Background rectangle (above the player)
+        x = screen_rect.centerx - width // 2
+        y = screen_rect.top - gap - height
+        bg_rect = pygame.Rect(x, y, width, height)
+
+        # Fill rectangle based on jump_power
+        pct = self.jump_power / MAX_JUMP_POWER
+        fill_rect = pygame.Rect(x, y, int(width * pct), height)
+
+        pygame.draw.rect(surface, bg_color, bg_rect, border_radius=3) # Background
+        pygame.draw.rect(surface, fg_color, fill_rect, border_radius=3) # Filling
+        pygame.draw.rect(surface, border_color, bg_rect, 1, border_radius=3) # Border
+
     def update(self, dt):
         self.input(dt)
         self.move(dt)

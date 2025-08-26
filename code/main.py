@@ -3,6 +3,7 @@ from settings import *
 from player import Player
 from tiledmap import TiledMap
 from sprites import CollisionSprite
+from camera import Camera
 
 class Game: 
     def __init__(self):
@@ -15,6 +16,9 @@ class Game:
 
         # Load Tiled Map
         self.map = TiledMap("data/Map/unbenannt.tmx")
+
+        # Camera
+        self.camera = Camera(self.map.height)
 
         #Sprites 
         self.all_sprites = pygame.sprite.Group()
@@ -43,7 +47,7 @@ class Game:
             dt = self.clock.tick() / 1000 # delta time
 
             self.display_surface.fill((255, 255, 255))
-            self.map.draw(self.display_surface)
+            #self.map.draw(self.display_surface)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -52,9 +56,21 @@ class Game:
                     self.player.event_handler(event) 
 
             self.all_sprites.update(dt) # Update all sprites
-            self.all_sprites.draw(self.display_surface)
+            self.camera.update(self.player.rect)
+
+            self.map.draw(self.display_surface, self.camera)
+            
+            for spr in self.all_sprites:
+                offset_rect = spr.rect.move(0, self.camera.offset.y)
+                self.display_surface.blit(spr.image, offset_rect)
+
+                if isinstance(spr, Player):
+                    spr.draw_charge_bar(self.display_surface, self.camera)
+
+            #self.all_sprites.draw(self.display_surface)
+
             self.debug_draw_grid()
-            print(f"Velocity x: {self.player.velocity_x}, Velocity y: {self.player.velocity_y}")
+            #print(f"Velocity x: {self.player.velocity_x}, Velocity y: {self.player.velocity_y}")
             pygame.display.update()  # Update the display
 
         pygame.quit()

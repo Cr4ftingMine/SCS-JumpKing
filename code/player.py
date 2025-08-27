@@ -1,6 +1,6 @@
 from settings import *
 class Player(pygame.sprite.Sprite):
-    def __init__(self, collision_sprites=None):
+    def __init__(self, collision_sprites=None, slope_sprites=None):
         super().__init__()
         self.frames = {}
         self.scale = (64, 64)  
@@ -26,9 +26,12 @@ class Player(pygame.sprite.Sprite):
         self.jump_power = 0
         self.jump_direction = 0
         self.on_ground = True
+        self.on_slope = False
         self.charging_jump = False
 
+        #Sprites
         self.collision_sprites = collision_sprites
+        self.slope_sprites = slope_sprites
 
     def load_images(self):
         def load(path): return pygame.transform.smoothscale(pygame.image.load(join("images", "player", path)).convert_alpha(), self.scale)
@@ -71,6 +74,7 @@ class Player(pygame.sprite.Sprite):
         self.hitbox.y += self.velocity_y * dt
         self.on_ground = False
         self.handle_collisions("vertical")
+        self.handle_slope_collisions()
 
         # Reconnect Renderrect and Colliderect -> Movement from Renderrect
         self.rect.midbottom = self.hitbox.midbottom 
@@ -162,6 +166,25 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(surface, bg_color, bg_rect, border_radius=3) # Background
         pygame.draw.rect(surface, fg_color, fill_rect, border_radius=3) # Filling
         pygame.draw.rect(surface, border_color, bg_rect, 1, border_radius=3) # Border
+    
+    def handle_slope_collisions(self):
+        for slope in self.slope_sprites:
+            if slope.rect.colliderect(self.hitbox):
+                print("Kollision")
+                y_on = slope.y_on(self.hitbox.centerx)
+
+                if self.hitbox.bottom >= y_on - 8 and self.hitbox.top < slope.rect.bottom:
+                    self.hitbox.bottom = y_on
+                    self.velocity_y = 0
+                    self.on_ground = False
+        
+                    # Slide mechanic
+                    y_l = slope.y_on(slope.rect.left + 1)
+                    y_r = slope.y_on(slope.rect.right - 2)
+                    downhill = 1 if y_r > y_l else -1 if y_r < y_l else 0 
+                    self.velocity_x = downhill * SLIDE_SPEED
+    
+
 
     def update(self, dt):
         self.input(dt)

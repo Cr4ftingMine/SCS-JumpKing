@@ -1,6 +1,6 @@
 from settings import *
 from pytmx.util_pygame import load_pygame
-from sprites import CollisionSprite
+from sprites import CollisionSprite, SlopeSprite
 
 class TiledMap:
     def __init__(self, filename):
@@ -11,17 +11,26 @@ class TiledMap:
         print(f"width: {self.width}, height: {self.height}")
 
         self.collision_sprites = pygame.sprite.Group()
+        self.slope_sprites = pygame.sprite.Group()
 
         offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
         for layer in self.tmx_data.visible_layers:
             if hasattr(layer, 'tiles'):
                 for x, y, gid in layer:
                     props = self.tmx_data.get_tile_properties_by_gid(gid)
-                    if props and props.get("collidable"):
+                    if props:
                         pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
-                        size = (TILE_SIZE, TILE_SIZE)
-                        #print(f"x: {x}, y: {y}, pos: {pos}, offset_y: {offset_y}")
-                        CollisionSprite(pos, size, self.collision_sprites)
+                        if props.get("collidable"):
+                            #pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
+                            size = (TILE_SIZE, TILE_SIZE)
+                            #print(f"x: {x}, y: {y}, pos: {pos}, offset_y: {offset_y}")
+                            CollisionSprite(pos, size, self.collision_sprites)
+                        if props.get("slope"):
+                            image = self.tmx_data.get_tile_image_by_gid(gid)
+                            #pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
+                            SlopeSprite(pos, image, self.slope_sprites)
+
+        print("Slopes: ", len(self.slope_sprites))
 
         #Map-Border
         left_wall_x = -TILE_SIZE

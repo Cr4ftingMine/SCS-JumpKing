@@ -14,6 +14,8 @@ TILE_SIZE = 64 # Größe eines Tiles in Pixeln
 # PLAYER_SPEED = 250
 
 GRAVITY = 2000         # Pixel pro Sekunde² – für realistisches Jump-Feeling
-MAX_JUMP_POWER = 1000   # Initialgeschwindigkeit (Pixel pro Sekunde)
+MAX_JUMP_POWER = 1100   # Initialgeschwindigkeit (Pixel pro Sekunde) # 1000
 PLAYER_SPEED = 300     # Laufgeschwindigkeit (Pixel pro Sekunde)
 JUMP_CHARGE_RATE = 1000  # Wie schnell Sprungkraft geladen wird (Pixel/s²)
+
+SLIDE_SPEED = 200 # Rutschgeschwindigkeit auf der Rampe

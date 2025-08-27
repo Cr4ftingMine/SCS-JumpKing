@@ -4,12 +4,13 @@ from player import Player
 from tiledmap import TiledMap
 from sprites import CollisionSprite
 from camera import Camera
+from ui import UI
 
 class Game: 
     def __init__(self):
         #setup
         pygame.init()
-        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
         pygame.display.set_caption("Extended Jump King")
         self.clock = pygame.time.Clock()
         self.running = True
@@ -20,10 +21,13 @@ class Game:
         # Camera
         self.camera = Camera(self.map.height)
 
-        #Sprites 
+        # Sprites 
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(collision_sprites=self.map.collision_sprites)
+        self.player = Player(collision_sprites=self.map.collision_sprites, slope_sprites=self.map.slope_sprites)
         self.all_sprites.add(self.player)
+
+        # UI
+        self.ui = UI(self.display_surface, self.player, self.map)
 
         
 
@@ -45,6 +49,7 @@ class Game:
     def run(self):
         while self.running:
             dt = self.clock.tick() / 1000 # delta time
+            dt = min(dt, 0.05) # limit dt to max 50ms (avoid big physics jumps when window is dragged or game lags)
 
             self.display_surface.fill((255, 255, 255))
             #self.map.draw(self.display_surface)
@@ -70,8 +75,11 @@ class Game:
             #self.all_sprites.draw(self.display_surface)
 
             self.debug_draw_grid()
+
+            self.ui.draw()
             #print(f"Velocity x: {self.player.velocity_x}, Velocity y: {self.player.velocity_y}")
-            pygame.display.update()  # Update the display
+            #pygame.display.update()  # Update the display
+            pygame.display.flip()
 
         pygame.quit()
 

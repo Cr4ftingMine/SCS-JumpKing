@@ -29,6 +29,10 @@ class Game:
         # UI
         self.ui = UI(self.display_surface, self.player, self.map)
 
+        # Items
+        for spr in self.map.item_sprites:
+            self.all_sprites.add(spr)
+
         
 
     def load_images(self):
@@ -62,6 +66,14 @@ class Game:
 
             self.all_sprites.update(dt) # Update all sprites
             self.camera.update(self.player.rect)
+
+            # Items
+            hits = pygame.sprite.spritecollide(self.player, self.map.item_sprites, dokill=True)
+            for item in hits:
+                if hasattr(item, "on_pickup"):
+                    item.on_pickup(self.player)
+
+
 
             self.map.draw(self.display_surface, self.camera)
             

@@ -1,6 +1,6 @@
 from settings import *
 from pytmx.util_pygame import load_pygame
-from sprites import CollisionSprite, SlopeSprite
+from sprites import CollisionSprite, SlopeSprite, Item, TeleportStone, JumpBoost, Slowfall, DoubleJump, WallGrip
 
 class TiledMap:
     def __init__(self, filename):
@@ -12,6 +12,8 @@ class TiledMap:
 
         self.collision_sprites = pygame.sprite.Group()
         self.slope_sprites = pygame.sprite.Group()
+        self.item_sprites = pygame.sprite.Group()
+
 
         offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
         for layer in self.tmx_data.visible_layers:
@@ -29,6 +31,28 @@ class TiledMap:
                             image = self.tmx_data.get_tile_image_by_gid(gid)
                             #pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
                             SlopeSprite(pos, image, self.slope_sprites)
+                        
+                        item_type = props.get("item")
+                        if item_type:
+                            cx = pos[0] + TILE_SIZE / 2
+                            cy = pos[1] + TILE_SIZE / 2
+                            item_image = self.tmx_data.get_tile_image_by_gid(gid)
+
+                            if item_type == "Teleportstone":
+                                TeleportStone((cx, cy), None, item_image, self.item_sprites)
+
+                            if item_type == "JumpBoost":
+                                JumpBoost((cx, cy), item_image, self.item_sprites)
+                            
+                            if item_type == "Slowfall":
+                                Slowfall((cx, cy), item_image, self.item_sprites)
+
+                            if item_type == "DoubleJump":
+                                DoubleJump((cx, cy), item_image, self.item_sprites)
+                            
+                            if item_type == "WallGrip":
+                                WallGrip((cx, cy), item_image, self.item_sprites)
+                            
 
         print("Slopes: ", len(self.slope_sprites))
 
@@ -62,7 +86,7 @@ class TiledMap:
         offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
         
         for layer in self.tmx_data.visible_layers:
-            if hasattr(layer, 'tiles'):
+            if hasattr(layer, 'tiles') and layer.name != "Items": # Items in extra Layer
                 for x, y, image in layer.tiles():
                     if image:
                         world_x = x * TILE_SIZE

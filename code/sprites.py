@@ -34,3 +34,67 @@ class SlopeSprite(pygame.sprite.Sprite):
         x_local = int(max(0, min(self.rect.w - 1, x_world - self.rect.left)))
         y_local = self.heights[x_local]
         return self.rect.top + y_local
+
+
+class Item(pygame.sprite.Sprite):
+    def __init__(self, pos, image: pygame.Surface, name, *groups):
+        super().__init__(*groups)
+        self.image = pygame.transform.smoothscale(image,(48,48))
+        self.rect = self.image.get_frect(center=pos)
+        self.name = name
+        self.unique_id = None # set by Tiled
+    
+    def on_pickup(self,player):
+        player.inventory.append(self)
+
+    def use(self,player):
+        pass
+
+class TeleportStone(Item):
+    def __init__(self, pos, target_pos=None, image: pygame.Surface = None, *groups):
+        super().__init__(pos, image, "Teleportstein", *groups)
+        self.target_pos = target_pos
+
+    def use(self, player):
+        print("Hier soll Magie passieren")
+        player.hitbox.y -= 100
+        player.rect.midbottom = player.hitbox.midbottom
+
+class JumpBoost(Item):
+    def __init__(self, pos, image: pygame.Surface = None, *groups):
+        super().__init__(pos, image, "JumpBoost", *groups)
+        self.jump_boost_amount = 500
+        self.jump_boost_duration = 5
+
+    def use(self, player):
+        print("Jump Boost")
+        player.max_jump_power = player.max_jump_power + self.jump_boost_amount
+        player.jump_boost_timer = self.jump_boost_duration
+        print(f"Jump Boost aktiviert: {player.max_jump_power} für {self.jump_boost_duration} Sekunden!")
+
+class Slowfall(Item):
+    def __init__(self, pos, image: pygame.Surface = None, *groups):
+        super().__init__(pos, image, "Slowfall", *groups)
+        self.slowfall_factor = 0.35
+        self.slowfall_duration = 5
+    
+    def use(self, player):
+        print("Slowfall")
+        player.slowfall_factor = self.slowfall_factor
+        player.slowfall_timer = self.slowfall_duration
+        print(f"Slowfall aktiviert: {self.slowfall_factor} für {self.slowfall_duration} Sekunden!")
+
+
+class DoubleJump(Item):
+    def __init__(self, pos, image: pygame.Surface = None, *groups):
+        super().__init__(pos, image, "DoubleJump", *groups)
+
+    def use(self, player):
+        print("Double Jump")
+
+class WallGrip(Item):
+    def __init__(self, pos, image: pygame.Surface = None, *groups):
+        super().__init__(pos, image, "WallGrip", *groups)
+    
+    def use(self, player):
+        print("Wall Grip")

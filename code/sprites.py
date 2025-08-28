@@ -98,3 +98,29 @@ class WallGrip(Item):
     
     def use(self, player):
         print("Wall Grip")
+
+
+class Checkpoint(pygame.sprite.Sprite):
+    def __init__(self, pos, image: pygame.Surface, group_all, *groups):
+        super().__init__(*groups)
+        self.image_red = image.convert_alpha()
+        self.image_green = pygame.image.load(join("images", "tiles", "checkpoint_green.png")).convert_alpha()
+        self.image = self.image_red
+        self.rect = self.image.get_frect(topleft=pos)
+
+        self.group_all = group_all
+        self.active = False
+
+    def set_active(self, is_active=True):
+        if is_active:
+            # Deactivate all other checkpoints
+            for checkpoint in self.group_all:
+                checkpoint.active = False
+                checkpoint.image = checkpoint.image_red
+
+        # Activate selected checkpoint
+        self.active = is_active
+        self.image = self.image_green if is_active else self.image_red
+        
+    def get_spawnpoint(self):
+        return self.rect.midbottom

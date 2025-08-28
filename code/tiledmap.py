@@ -1,6 +1,6 @@
 from settings import *
 from pytmx.util_pygame import load_pygame
-from sprites import CollisionSprite, SlopeSprite, Item, TeleportStone, JumpBoost, Slowfall, DoubleJump, WallGrip
+from sprites import CollisionSprite, SlopeSprite, Item, TeleportStone, JumpBoost, Slowfall, DoubleJump, WallGrip, Checkpoint
 
 class TiledMap:
     def __init__(self, filename):
@@ -9,10 +9,12 @@ class TiledMap:
         self.height = self.tmx_data.height * TILE_SIZE
         self.layers = {layer.name: layer for layer in self.tmx_data.visible_layers}
         print(f"width: {self.width}, height: {self.height}")
+        print(self.layers)
 
         self.collision_sprites = pygame.sprite.Group()
         self.slope_sprites = pygame.sprite.Group()
         self.item_sprites = pygame.sprite.Group()
+        self.checkpoint_sprites = pygame.sprite.Group()
 
 
         offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
@@ -31,11 +33,17 @@ class TiledMap:
                             image = self.tmx_data.get_tile_image_by_gid(gid)
                             #pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
                             SlopeSprite(pos, image, self.slope_sprites)
-                        
+                        if props.get("checkpoint"):
+                            cp_image = self.tmx_data.get_tile_image_by_gid(gid)
+                            Checkpoint(pos, cp_image, self.checkpoint_sprites, self.checkpoint_sprites)
+
+
                         item_type = props.get("item")
                         if item_type:
+                            # Items are positioned by their center (Item.rect uses center) #!TODO: Erklärung
                             cx = pos[0] + TILE_SIZE / 2
                             cy = pos[1] + TILE_SIZE / 2
+                            #print(f"cx: {cx}, x: {x * TILE_SIZE} - cy: {cy}, y:{y * TILE_SIZE}")
                             item_image = self.tmx_data.get_tile_image_by_gid(gid)
 
                             if item_type == "Teleportstone":
@@ -52,9 +60,12 @@ class TiledMap:
                             
                             if item_type == "WallGrip":
                                 WallGrip((cx, cy), item_image, self.item_sprites)
+                        
+
                             
 
         print("Slopes: ", len(self.slope_sprites))
+        print("Checkpoints: ", len(self.checkpoint_sprites))
 
         #Map-Border
         left_wall_x = -TILE_SIZE
@@ -86,7 +97,7 @@ class TiledMap:
         offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
         
         for layer in self.tmx_data.visible_layers:
-            if hasattr(layer, 'tiles') and layer.name != "Items": # Items in extra Layer
+            if hasattr(layer, 'tiles') and layer.name != "Items" and layer.name != "Checkpoint": # Items in extra Layer
                 for x, y, image in layer.tiles():
                     if image:
                         world_x = x * TILE_SIZE

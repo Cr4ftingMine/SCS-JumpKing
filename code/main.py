@@ -24,16 +24,20 @@ class Game:
         # Sprites 
         self.all_sprites = pygame.sprite.Group()
         self.player = Player(collision_sprites=self.map.collision_sprites, slope_sprites=self.map.slope_sprites)
-        self.all_sprites.add(self.player)
+        #self.all_sprites.add(self.player)
 
         # UI
         self.ui = UI(self.display_surface, self.player, self.map)
 
         # Items
-        for spr in self.map.item_sprites:
-            self.all_sprites.add(spr)
+        for item in self.map.item_sprites:
+            self.all_sprites.add(item)
 
-        
+        # Checkpoint
+        for checkpoint in self.map.checkpoint_sprites:
+            self.all_sprites.add(checkpoint)
+
+        self.all_sprites.add(self.player) #!TODO: Platzänderung wegen Zeichenreichenfolge
 
     def load_images(self):
         pass
@@ -68,10 +72,17 @@ class Game:
             self.camera.update(self.player.rect)
 
             # Items
-            hits = pygame.sprite.spritecollide(self.player, self.map.item_sprites, dokill=True)
-            for item in hits:
+            item_hits = pygame.sprite.spritecollide(self.player, self.map.item_sprites, dokill=True)
+            for item in item_hits:
                 if hasattr(item, "on_pickup"):
                     item.on_pickup(self.player)
+
+            # Checkpoints
+            checkpoint_hits = pygame.sprite.spritecollide(self.player, self.map.checkpoint_sprites, dokill=False)
+            for checkpoint in checkpoint_hits:
+                print("kollision checkpoint")
+                checkpoint.set_active()
+                self.player.last_checkpoint = checkpoint
 
 
 

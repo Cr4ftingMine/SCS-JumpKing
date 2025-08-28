@@ -44,6 +44,9 @@ class Player(pygame.sprite.Sprite):
         self.selected_item = 0
         self.last_ground_pos = self.hitbox.midbottom # Vielleicht andere Lösung? 
 
+        # Checkpoint
+        self.last_checkpoint = None
+
         #Sprites
         self.collision_sprites = collision_sprites
         self.slope_sprites = slope_sprites
@@ -73,6 +76,9 @@ class Player(pygame.sprite.Sprite):
             if event.key == pygame.K_1: self.selected_item = 0
             if event.key == pygame.K_2: self.selected_item = 1
             if event.key == pygame.K_3: self.selected_item = 2
+
+            if event.key == pygame.K_r:
+                self.respawn_to_last_checkpoint()
 
     def input(self,dt):
         keys = pygame.key.get_pressed()
@@ -206,7 +212,8 @@ class Player(pygame.sprite.Sprite):
             if slope.rect.colliderect(self.hitbox):
                 y_on = slope.y_on(self.hitbox.centerx)
 
-                if self.hitbox.bottom >= y_on - 8 and self.hitbox.top < slope.rect.bottom:
+                #if self.hitbox.bottom >= y_on - 8 and self.hitbox.top < slope.rect.bottom:
+                if self.velocity_y >= 0 and self.hitbox.bottom <= y_on + 5:
                     self.hitbox.bottom = y_on
                     self.velocity_y = 0
                     self.on_ground = False
@@ -231,6 +238,14 @@ class Player(pygame.sprite.Sprite):
             self.slowfall_timer -= dt
             if self.slowfall_timer <= 0:
                 print("Slowfall deaktiviert")
+
+    def respawn_to_last_checkpoint(self):
+        checkpoint = self.last_checkpoint
+        if checkpoint:
+            self.velocity_x = 0
+            self.velocity_y = 0
+            self.hitbox.midbottom = checkpoint.get_spawnpoint()
+            self.rect.midbottom = self.hitbox.midbottom
 
     def update(self, dt):
         self.update_buffs(dt)

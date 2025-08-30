@@ -1,6 +1,6 @@
 from settings import *
 class Player(pygame.sprite.Sprite):
-    def __init__(self, collision_sprites=None, slope_sprites=None, slippery_sprites=None):
+    def __init__(self, collision_sprites=None, slope_sprites=None, slippery_sprites=None, actionblock_sprites=None):
         super().__init__()
         self.frames = {}
         self.scale = (64, 64)  
@@ -57,6 +57,7 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
         self.slope_sprites = slope_sprites
         self.slippery_sprites = slippery_sprites
+        self.actionblock_sprites = actionblock_sprites
 
     def load_images(self):
         def load(path): return pygame.transform.smoothscale(pygame.image.load(join("images", "player", path)).convert_alpha(), self.scale)
@@ -86,6 +87,13 @@ class Player(pygame.sprite.Sprite):
 
             if event.key == pygame.K_r:
                 self.respawn_to_last_checkpoint()
+
+            if event.key == pygame.K_f:
+                for action_block in self.actionblock_sprites:
+                    if self.hitbox.colliderect(action_block.rect):
+                        if hasattr(action_block, "interact"):
+                            action_block.interact()
+                    
 
     def input(self,dt):
         keys = pygame.key.get_pressed()

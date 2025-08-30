@@ -8,7 +8,6 @@ class CollisionSprite(pygame.sprite.Sprite):
         # self.image.set_alpha(0)  # unsichtbar im Spiel
         self.rect = self.image.get_frect(topleft=pos)
 
-
 class SlopeSprite(pygame.sprite.Sprite):
     def __init__(self,pos, image: pygame.Surface, *groups):
         super().__init__(*groups)
@@ -40,7 +39,6 @@ class SlipperySprite(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.image = pygame.Surface(size)
         self.rect = self.image.get_frect(topleft=pos)
-
 
 class Item(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, name, *groups):
@@ -90,7 +88,6 @@ class Slowfall(Item):
         player.slowfall_timer = self.slowfall_duration
         print(f"Slowfall aktiviert: {self.slowfall_factor} für {self.slowfall_duration} Sekunden!")
 
-
 class DoubleJump(Item):
     def __init__(self, pos, image: pygame.Surface = None, *groups):
         super().__init__(pos, image, "DoubleJump", *groups)
@@ -104,7 +101,6 @@ class WallGrip(Item):
     
     def use(self, player):
         print("Wall Grip")
-
 
 class Checkpoint(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, group_all, *groups):
@@ -130,3 +126,49 @@ class Checkpoint(pygame.sprite.Sprite):
         
     def get_spawnpoint(self):
         return self.rect.midbottom
+
+class ActionBlock(pygame.sprite.Sprite):
+    def __init__(self, pos, image: pygame.Surface, *groups):
+        super().__init__(*groups)
+        self.image = image.convert_alpha()
+        self.rect = self.image.get_frect(topleft=pos)
+
+class DisappearingBlock(ActionBlock):
+    def __init__(self, pos, image: pygame.Surface, collision_group = None, start_visible = True, *groups):
+        super().__init__(pos, image, *groups)
+        self.visible_image = self.image
+        self.invisible_image = pygame.Surface(self.visible_image.get_size(), pygame.SRCALPHA)
+        self.collision_group = collision_group
+        self.visible = start_visible
+
+        self.set_visible(self.visible)
+
+    def set_visible(self, is_visible: bool):
+        self.visible = is_visible
+        self.image = self.visible_image if is_visible else self.invisible_image
+
+        if is_visible:
+            self.collision_group.add(self)
+        else:
+            self.collision_group.remove(self)
+
+class Lever(ActionBlock):
+    def __init__(self, pos, image: pygame.Surface, target_group: None, *groups):
+        super().__init__(pos, image, *groups)
+        self.image_off = self.image
+        self.image_on = pygame.image.load(join("images", "tiles", "lever_right.png")).convert_alpha()
+        self.target_group = target_group
+        self.state_on = False
+
+    def interact(self):
+        self.state_on = not self.state_on
+        self.image = self.image_on if self.state_on else self.image_off
+        for block in self.target_group:
+            if hasattr(block, "set_visible"):
+                block.set_visible(not self.state_on)
+
+class Key (ActionBlock):
+    pass
+
+class EndDoor (ActionBlock):
+    pass

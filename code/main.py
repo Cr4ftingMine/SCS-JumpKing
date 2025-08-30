@@ -23,7 +23,7 @@ class Game:
 
         # Sprites 
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(collision_sprites=self.map.collision_sprites, slope_sprites=self.map.slope_sprites, slippery_sprites=self.map.slippery_sprites)
+        self.player = Player(collision_sprites=self.map.collision_sprites, slope_sprites=self.map.slope_sprites, slippery_sprites=self.map.slippery_sprites, actionblock_sprites=self.map.actionblock_sprites)
         #self.all_sprites.add(self.player)
 
         # UI
@@ -36,6 +36,10 @@ class Game:
         # Checkpoint
         for checkpoint in self.map.checkpoint_sprites:
             self.all_sprites.add(checkpoint)
+        
+        # Action Block
+        for action_block in self.map.actionblock_sprites:
+            self.all_sprites.add(action_block)
 
         self.all_sprites.add(self.player) #!TODO: Platzänderung wegen Zeichenreichenfolge
 

@@ -1,6 +1,7 @@
 from settings import *
 from pytmx.util_pygame import load_pygame
-from sprites import CollisionSprite, SlopeSprite, Item, TeleportStone, JumpBoost, Slowfall, DoubleJump, WallGrip, Checkpoint
+
+from sprites import CollisionSprite, SlopeSprite, SlipperySprite, Item, TeleportStone, JumpBoost, Slowfall, DoubleJump, WallGrip, Checkpoint
 
 class TiledMap:
     def __init__(self, filename):
@@ -13,6 +14,7 @@ class TiledMap:
 
         self.collision_sprites = pygame.sprite.Group()
         self.slope_sprites = pygame.sprite.Group()
+        self.slippery_sprites = pygame.sprite.Group()
         self.item_sprites = pygame.sprite.Group()
         self.checkpoint_sprites = pygame.sprite.Group()
 
@@ -24,15 +26,15 @@ class TiledMap:
                     props = self.tmx_data.get_tile_properties_by_gid(gid)
                     if props:
                         pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
+                        size = (TILE_SIZE, TILE_SIZE)
                         if props.get("collidable"):
-                            #pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
-                            size = (TILE_SIZE, TILE_SIZE)
-                            #print(f"x: {x}, y: {y}, pos: {pos}, offset_y: {offset_y}")
                             CollisionSprite(pos, size, self.collision_sprites)
+                        if props.get("slippery"):
+                            SlipperySprite(pos, size, self.slippery_sprites)
                         if props.get("slope"):
-                            image = self.tmx_data.get_tile_image_by_gid(gid)
-                            #pos = (x * TILE_SIZE, y * TILE_SIZE + offset_y)
-                            SlopeSprite(pos, image, self.slope_sprites)
+                            slope_image = self.tmx_data.get_tile_image_by_gid(gid)
+                            SlopeSprite(pos, slope_image, self.slope_sprites)
+
                         if props.get("checkpoint"):
                             cp_image = self.tmx_data.get_tile_image_by_gid(gid)
                             Checkpoint(pos, cp_image, self.checkpoint_sprites, self.checkpoint_sprites)
@@ -65,6 +67,7 @@ class TiledMap:
                             
 
         print("Slopes: ", len(self.slope_sprites))
+        print("Eisflächen: ", len(self.slippery_sprites))
         print("Checkpoints: ", len(self.checkpoint_sprites))
 
         #Map-Border

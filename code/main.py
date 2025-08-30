@@ -23,7 +23,7 @@ class Game:
 
         # Sprites 
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(collision_sprites=self.map.collision_sprites, slope_sprites=self.map.slope_sprites)
+        self.player = Player(collision_sprites=self.map.collision_sprites, slope_sprites=self.map.slope_sprites, slippery_sprites=self.map.slippery_sprites)
         #self.all_sprites.add(self.player)
 
         # UI

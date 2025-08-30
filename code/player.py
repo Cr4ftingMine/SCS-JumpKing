@@ -1,6 +1,6 @@
 from settings import *
 class Player(pygame.sprite.Sprite):
-    def __init__(self, collision_sprites=None, slope_sprites=None):
+    def __init__(self, collision_sprites=None, slope_sprites=None, slippery_sprites=None):
         super().__init__()
         self.frames = {}
         self.scale = (64, 64)  
@@ -25,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 0 # Direction if on_ground: 1 for right, -1 for left
         self.on_ground = True
         self.on_slope = False
+        self.on_slippery = False
         self.charging_jump = False
 
         # Jump 
@@ -39,6 +40,11 @@ class Player(pygame.sprite.Sprite):
         self.slowfall_factor = 1
         self.slowfall_timer = 0
 
+        # Sliding
+        self.slide_x = 0.0
+        self.ice_speed = ICE_SPEED
+        self.slide_drag = ICE_SPEED_DRAG
+
         # Inventory
         self.inventory = []
         self.selected_item = 0
@@ -50,6 +56,7 @@ class Player(pygame.sprite.Sprite):
         #Sprites
         self.collision_sprites = collision_sprites
         self.slope_sprites = slope_sprites
+        self.slippery_sprites = slippery_sprites
 
     def load_images(self):
         def load(path): return pygame.transform.smoothscale(pygame.image.load(join("images", "player", path)).convert_alpha(), self.scale)
@@ -93,10 +100,22 @@ class Player(pygame.sprite.Sprite):
         #print(f"Jump Power: {self.jump_power}, Jump Direction: {self.jump_direction}")
 
     def move(self, dt):
+        self.handle_slippery_collisions()
         # 1) Horizontal movement + Kollision
         if self.on_ground:
-            if not self.charging_jump:
-                self.hitbox.x += self.direction * PLAYER_SPEED * dt
+            if self.direction != 0:
+                if not self.charging_jump:
+                    self.hitbox.x += self.direction * PLAYER_SPEED * dt
+                    self.slide_x = self.direction * ICE_SPEED
+            else: 
+                if self.on_slippery:
+                    self.hitbox.x += self.slide_x * dt
+                    self.slide_x *= max(0.0, 1.0 - self.slide_drag * dt)
+
+                    if abs(self.slide_x) < 5:
+                        self.slide_x = 0
+                else: 
+                    self.slide_x = 0
         else: 
             self.hitbox.x += self.velocity_x * dt
         self.handle_collisions("horizontal")
@@ -114,7 +133,12 @@ class Player(pygame.sprite.Sprite):
         self.hitbox.y += self.velocity_y * dt
         self.on_ground = False
         self.handle_collisions("vertical")
+        
+        # Slope Collision
         self.handle_slope_collisions()
+
+        # Collision with slippery Tiles
+        self.handle_slippery_collisions()
 
         # Reconnect Renderrect and Colliderect -> Movement from Renderrect
         self.rect.midbottom = self.hitbox.midbottom 
@@ -143,8 +167,12 @@ class Player(pygame.sprite.Sprite):
 
 #!TODO: Doppelbounce möglich? Im Spiel auch unterstützt?
                 elif direction == "horizontal":
-                    move_dir = self.velocity_x if not self.on_ground else self.direction
-                    #if self.velocity_x > 0:
+                    if not self.on_ground:
+                        move_dir = self.velocity_x
+                        self.slide_x = - self.slide_x
+                    else:
+                        move_dir = self.direction if self.direction != 0 else self.slide_x
+
                     if move_dir > 0: 
                         self.hitbox.right = sprite.rect.left
 
@@ -152,13 +180,45 @@ class Player(pygame.sprite.Sprite):
                         self.velocity_x = -PLAYER_SPEED * 0.5
                         self.velocity_y = max(self.velocity_y, -200)
 
-                    #elif self.velocity_x < 0:
                     elif move_dir < 0:
                         self.hitbox.left = sprite.rect.right
 
                         # Wall Bounce - Left into wall
                         self.velocity_x = PLAYER_SPEED * 0.5
                         self.velocity_y = max(self.velocity_y, -200)
+
+                    #if not self.on_ground:
+                            #self.slide_x = - self.slide_x
+
+    def handle_slope_collisions(self):
+        for slope in self.slope_sprites:
+            if slope.rect.colliderect(self.hitbox):
+                y_on = slope.y_on(self.hitbox.centerx)
+
+                #if self.hitbox.bottom >= y_on - 8 and self.hitbox.top < slope.rect.bottom:
+                if self.velocity_y >= 0 and self.hitbox.bottom <= y_on + 5:
+                    self.hitbox.bottom = y_on
+                    self.velocity_y = 0
+                    self.on_ground = False
+        
+                    # Slide mechanic
+                    y_l = slope.y_on(slope.rect.left + 1)
+                    y_r = slope.y_on(slope.rect.right - 2)
+                    downhill = 1 if y_r > y_l else -1 if y_r < y_l else 0 
+                    self.velocity_x = downhill * SLIDE_SPEED
+
+    def handle_slippery_collisions(self):
+        # Sensor underneath hitbox (2px drunter) -> Keine Kollision mit Eisfläche, da handle Collision bereits die Kollision verhindert
+        foot = self.hitbox.copy()
+        foot.height = 2
+        foot.top = self.hitbox.bottom
+
+        self.on_slippery = False
+        for slippery_tile in self.slippery_sprites:
+            if slippery_tile.rect.colliderect(foot):
+
+                self.on_slippery = True
+                return
 
     def animate(self, dt):
         if not self.on_ground:
@@ -206,24 +266,6 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(surface, bg_color, bg_rect, border_radius=3) # Background
         pygame.draw.rect(surface, fg_color, fill_rect, border_radius=3) # Filling
         pygame.draw.rect(surface, border_color, bg_rect, 1, border_radius=3) # Border
-
-    def handle_slope_collisions(self):
-        for slope in self.slope_sprites:
-            if slope.rect.colliderect(self.hitbox):
-                y_on = slope.y_on(self.hitbox.centerx)
-
-                #if self.hitbox.bottom >= y_on - 8 and self.hitbox.top < slope.rect.bottom:
-                if self.velocity_y >= 0 and self.hitbox.bottom <= y_on + 5:
-                    self.hitbox.bottom = y_on
-                    self.velocity_y = 0
-                    self.on_ground = False
-        
-                    # Slide mechanic
-                    y_l = slope.y_on(slope.rect.left + 1)
-                    y_r = slope.y_on(slope.rect.right - 2)
-                    downhill = 1 if y_r > y_l else -1 if y_r < y_l else 0 
-                    self.velocity_x = downhill * SLIDE_SPEED
-
 
     def update_buffs(self, dt):
         # JumpBoost

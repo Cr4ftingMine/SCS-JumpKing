@@ -19,3 +19,5 @@ PLAYER_SPEED = 300     # Laufgeschwindigkeit (Pixel pro Sekunde)
 JUMP_CHARGE_RATE = 1000  # Wie schnell Sprungkraft geladen wird (Pixel/s²)
 
 SLIDE_SPEED = 200 # Rutschgeschwindigkeit auf der Rampe
+ICE_SPEED = 150 # Geschwindigkeit auf Eis
+ICE_SPEED_DRAG = 5.0 # Geschwindigkeitsreduktion beim Rutschen

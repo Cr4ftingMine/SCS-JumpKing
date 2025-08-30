@@ -34,6 +34,12 @@ class SlopeSprite(pygame.sprite.Sprite):
         x_local = int(max(0, min(self.rect.w - 1, x_world - self.rect.left)))
         y_local = self.heights[x_local]
         return self.rect.top + y_local
+    
+class SlipperySprite(pygame.sprite.Sprite):
+    def __init__(self, pos, size, *groups):
+        super().__init__(*groups)
+        self.image = pygame.Surface(size)
+        self.rect = self.image.get_frect(topleft=pos)
 
 
 class Item(pygame.sprite.Sprite):
@@ -57,7 +63,7 @@ class TeleportStone(Item):
 
     def use(self, player):
         print("Hier soll Magie passieren")
-        player.hitbox.y -= 100
+        player.hitbox.y -= 1000
         player.rect.midbottom = player.hitbox.midbottom
 
 class JumpBoost(Item):

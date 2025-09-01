@@ -48,10 +48,16 @@ class Player(pygame.sprite.Sprite):
         # Inventory
         self.inventory = []
         self.selected_item = 0
-        self.last_ground_pos = self.hitbox.midbottom # Vielleicht andere Lösung? 
+        self.last_ground_pos = self.hitbox.midbottom 
+        
+        # Star coins
+        self.star_coins = 0
 
         # Checkpoint
         self.last_checkpoint = None
+
+        # End Key
+        self.end_key = 0
 
         #Sprites
         self.collision_sprites = collision_sprites

@@ -1,5 +1,5 @@
 from settings import *
-
+import math
 class CollisionSprite(pygame.sprite.Sprite):
     def __init__(self, pos, size, *groups):
         super().__init__(*groups)
@@ -102,6 +102,16 @@ class WallGrip(Item):
     def use(self, player):
         print("Wall Grip")
 
+class StarCoin(Item):
+    def __init__(self, pos, image:pygame.Surface = None, *groups):
+        super().__init__(pos, image, "StarCoin", *groups)
+        self.image = self.image.copy()
+        self.time = 0.0
+        self.flip_speed = 2.0
+    
+    def on_pickup(self, player):
+        player.star_coins += 1
+
 class Checkpoint(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, group_all, *groups):
         super().__init__(*groups)
@@ -160,15 +170,31 @@ class Lever(ActionBlock):
         self.target_group = target_group
         self.state_on = False
 
-    def interact(self):
+    def interact(self): #!TODO: Player wird benötigt für EndDoor aber nicht für Lever, andere Lösung?
         self.state_on = not self.state_on
         self.image = self.image_on if self.state_on else self.image_off
         for block in self.target_group:
             if hasattr(block, "set_visible"):
                 block.set_visible(not self.state_on)
 
-class Key (ActionBlock):
-    pass
+# class Key (ActionBlock):
+#     def __init__(self, pos, image: pygame.Surface, *groups):
+#         super().__init__(pos, image, *groups)
+    
+#     def on_pickup(self, player):
+#         player.end_key += 1
 
 class EndDoor (ActionBlock):
-    pass
+    def __init__(self, pos, image: pygame.Surface, *groups):
+        super().__init__(pos, image, *groups)
+        self.closed_image = self.image
+        self.open_image = pygame.image.load(join("images", "tiles", "enddoor_open.png")).convert_alpha()
+        self.is_open = False
+    
+    def interact(self):
+        if not self.is_open:
+            self.image = self.open_image
+            self.is_open = True
+            print(self.is_open)
+            print("Enddoor geöffnet!")
+            pygame.event.post(pygame.event.Event(GAME_WON)) # Trigger Win Screen + save?

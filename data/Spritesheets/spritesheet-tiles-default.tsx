@@ -11,7 +11,65 @@
    <property name="collidable" type="bool" value="true"/>
   </properties>
  </tile>
+ <tile id="3">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="4">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="5">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="6">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="8">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
  <tile id="19">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="20">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="21">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="22">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="23">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="24">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="26">
   <properties>
    <property name="collidable" type="bool" value="true"/>
   </properties>
@@ -21,7 +79,654 @@
    <property name="collidable" type="bool" value="true"/>
   </properties>
  </tile>
+ <tile id="38">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="39">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="40">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="41">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="42">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="44">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="50">
+  <properties>
+   <property name="item" value="Slowfall"/>
+  </properties>
+ </tile>
  <tile id="55">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="56">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="57">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="58">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="59">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="60">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="61">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="62">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="68">
+  <properties>
+   <property name="item" value="Teleportstone"/>
+  </properties>
+ </tile>
+ <tile id="69">
+  <properties>
+   <property name="action_block" value="EndDoor"/>
+   <property name="enddoor" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="73">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="74">
+  <properties>
+   <property name="slippery" type="bool" value="true"/>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="75">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="76">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="77">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="78">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="79">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="80">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="86">
+  <properties>
+   <property name="item" value="JumpBoost"/>
+  </properties>
+ </tile>
+ <tile id="91">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="92">
+  <properties>
+   <property name="slippery" type="bool" value="true"/>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="93">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="94">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="95">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="96">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="97">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="109">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="110">
+  <properties>
+   <property name="slippery" type="bool" value="true"/>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="111">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="112">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="113">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="114">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="115">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="127">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="128">
+  <properties>
+   <property name="slippery" type="bool" value="true"/>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="129">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="130">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="132">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="133">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="145">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="146">
+  <properties>
+   <property name="slippery" type="bool" value="true"/>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="147">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="148">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="150">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="151">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="155">
+  <properties>
+   <property name="action_block" value="lever"/>
+  </properties>
+ </tile>
+ <tile id="159">
+  <properties>
+   <property name="starcoin" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="162">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="163">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="164">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="165">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="166">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="168">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="169">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="176">
+  <properties>
+   <property name="checkpoint" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="180">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="181">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="182">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="183">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="184">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="186">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="187">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="198">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="199">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="200">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="201">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="202">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="203">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="204">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="205">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="216">
+  <properties>
+   <property name="collidable" type="bool" value="false"/>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="0" y="0" width="64" height="64"/>
+  </objectgroup>
+ </tile>
+ <tile id="217">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="218">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="219">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="220">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="221">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="222">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="223">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="234">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="235">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="236">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="237">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="238">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="239">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="240">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="241">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="252">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="253">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="254">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="255">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="256">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="257">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="258">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="259">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="270">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="271">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="272">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="273">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="274">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="275">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="276">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="277">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="288">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="289">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="290">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="291">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="292">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="293">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="294">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="295">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="299">
+  <properties>
+   <property name="action_block" value="Key"/>
+  </properties>
+ </tile>
+ <tile id="304">
+  <properties>
+   <property name="action_block" value="disappearing_block"/>
+  </properties>
+ </tile>
+ <tile id="306">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="307">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="308">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+   <property name="slippery" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="309">
+  <properties>
+   <property name="slope" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="310">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="311">
+  <properties>
+   <property name="collidable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="313">
   <properties>
    <property name="collidable" type="bool" value="true"/>
   </properties>

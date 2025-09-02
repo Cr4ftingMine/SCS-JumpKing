@@ -1,2 +1,8 @@
 code/__pycache__/
 .vscode/
+.vscode/settings.json
+data/scores.json
+code/__pycache__/player.cpython-313.pyc
+code/__pycache__/settings.cpython-313.pyc
+code/__pycache__/sprites.cpython-313.pyc
+code/__pycache__/tiledmap.cpython-313.pyc

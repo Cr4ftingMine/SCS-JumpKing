@@ -31,6 +31,11 @@ class Menu:
         self.scores = {}
         self.load_scores()
 
+        # Sound
+        self.select_sound = pygame.mixer.Sound(join("audio", "menu_click.ogg"))
+        self.select_sound.set_volume(0.008)
+        self.switch_sound = pygame.mixer.Sound(join("audio", "switch29.ogg"))
+        self.switch_sound.set_volume(0.008)
 
     def load_levels(self):
         # Load all .tmx files and return them as a list of dicts {"name": <level name>, "path": <file path>}
@@ -64,9 +69,12 @@ class Menu:
     def handle_main_keydown_events(self, event):
         if event.key in (pygame.K_UP, pygame.K_w):
             self.main_menu_selected = (self.main_menu_selected - 1) % 2
+            self.select_sound.play()
         elif event.key in (pygame.K_DOWN, pygame.K_s):
             self.main_menu_selected = (self.main_menu_selected + 1) % 2
+            self.select_sound.play()
         elif event.key in (pygame.K_RETURN, pygame.K_SPACE):
+            self.select_sound.play()
             if self.main_menu_selected == 0:
                 self.menu_mode = "levels"
             else: 
@@ -75,15 +83,20 @@ class Menu:
     def handle_levels_keydown_events(self, event):
         if event.key in (pygame.K_ESCAPE, pygame.K_BACKSPACE):
             self.menu_mode = "main"
+            self.select_sound.play()
         elif event.key in (pygame.K_UP, pygame.K_w):
+            self.select_sound.play()
             if self.levels:
-                self.level_selected = (self.level_selected - 1) % len(self.levels)
+                self.level_selected = (self.level_selected - 1) % len(self.levels) 
         elif event.key in (pygame.K_DOWN, pygame.K_s):
+            self.select_sound.play()
             if self.levels:
                 self.level_selected = (self.level_selected + 1) % len(self.levels)
         elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+            self.switch_sound.play()
             self.change_extension_state()
         elif event.key in (pygame.K_RETURN, pygame.K_SPACE):
+            self.select_sound.play()
             self.start_selected_level()
     
     # Draw Menu / Levels

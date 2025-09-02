@@ -111,6 +111,7 @@ class StarCoin(Item):
     
     def on_pickup(self, player):
         player.star_coins += 1
+        
 
 class Checkpoint(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, group_all, *groups):

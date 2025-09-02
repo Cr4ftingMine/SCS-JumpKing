@@ -35,6 +35,10 @@ class Player(pygame.sprite.Sprite):
         self.max_jump_power = MAX_JUMP_POWER # Changeable by item
         self.jump_boost_timer = 0 # Remaining time of Jumpboost
 
+        # Jump Sound
+        self.jump_sound = pygame.mixer.Sound(join("audio", "jump_sound.wav"))
+        self.jump_sound.set_volume(0.008)
+
         # Gravity
         self.base_gravity = GRAVITY
         self.slowfall_factor = 1
@@ -133,7 +137,7 @@ class Player(pygame.sprite.Sprite):
         else: 
             self.hitbox.x += self.velocity_x * dt
         self.handle_collisions("horizontal")
-
+        
         # 2) Vertical movement + Kollision
         # Base Gravity
         eff_gravity = self.base_gravity
@@ -165,6 +169,7 @@ class Player(pygame.sprite.Sprite):
             self.jump_power = 0
             self.charging_jump = False
             self.on_ground = False 
+            self.jump_sound.play()
 
     def handle_collisions(self,direction):
         for sprite in self.collision_sprites:

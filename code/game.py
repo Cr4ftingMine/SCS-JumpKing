@@ -64,8 +64,17 @@ class Game:
         for starcoin in self.map.starcoin_sprites:
             self.all_sprites.add(starcoin)
         
+        
         # Player II
         self.all_sprites.add(self.player) #!TODO: Platzänderung wegen Zeichenreichenfolge
+
+        # Sounds
+        self.starcoin_sound = pygame.mixer.Sound(join("audio", "starcoin.wav"))
+        self.starcoin_sound.set_volume(0.008)
+        self.item_pickup_sound = pygame.mixer.Sound(join("audio", "item_pickup.wav"))
+        self.item_pickup_sound.set_volume(0.008)
+        self.checkpoint_sound = None
+        
 
     def debug_draw_grid(self):
         for x in range(0, WINDOW_WIDTH, 64):
@@ -120,6 +129,7 @@ class Game:
         for item in item_hits:
             if hasattr(item, "on_pickup"):
                 item.on_pickup(self.player)
+                self.item_pickup_sound.play()
 
         # Checkpoints
         checkpoint_hits = pygame.sprite.spritecollide(self.player, self.map.checkpoint_sprites, dokill=False)
@@ -134,6 +144,7 @@ class Game:
             print("Sternenmünze Kollision")
             if hasattr(starcoin, "on_pickup"):
                 starcoin.on_pickup(self.player)
+                self.starcoin_sound.play()
             print(self.player.star_coins)
 
         #self.map.draw(self.display_surface, self.camera)

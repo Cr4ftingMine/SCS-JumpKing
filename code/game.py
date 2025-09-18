@@ -29,6 +29,9 @@ class Game:
         # Clock
         self.clock = pygame.time.Clock() 
 
+        # Level-Timer
+        self.level_time = 0.0 # elapsed time in seconds
+
         # Running Variable
         self.running = True
 
@@ -116,6 +119,10 @@ class Game:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self.show_ingame_menu = True # Open ingame menu
             else: self.player.event_handler(event)
+
+        # Update level time if not paused or win screen
+        if not self.show_ingame_menu and not self.show_winscreen:
+            self.level_time += dt
         
         # Background
         self.display_surface.fill((255, 255, 255))
@@ -161,7 +168,7 @@ class Game:
             
         self.debug_draw_grid()
 
-        self.ui.draw()
+        self.ui.draw(self.level_time)
 
         # Compute offsets for centering the game surface in the current window
         display_surface_width, display_surface_height = self.display_surface.get_size()

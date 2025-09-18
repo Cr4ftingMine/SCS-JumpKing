@@ -23,13 +23,17 @@ class UI:
             "2": load("key_2.png", self.key_icon_size),
             "3": load("key_3.png", self.key_icon_size)
         }
-
-    def draw_height(self): #!TODO: Will ich das? Höhe ungleich Höhenlayer, da anders gezählt
-        height_value = int((WINDOW_WIDTH - TILE_SIZE) - self.player.hitbox.bottom)
-        text_surface = self.font.render(f"Height: {int(height_value / 64)}", True, (0,0,0)) 
+    
+    # Draw the time elapsed since start of level
+    def draw_timer(self, elapsed_time):
+        minutes = int(elapsed_time // 60)
+        sec = int(elapsed_time % 60)
+        label = f"Time: {minutes:02d}:{sec:02d}"
+        text_surface = self.font.render(label, True, (0, 0, 0))
         text_rect = text_surface.get_rect(topright=(WINDOW_WIDTH - 10, 10))
         self.surface.blit(text_surface, text_rect)
 
+    # Draw the inventory slots
     def draw_inventory(self):
         slot_size = 48
         slot_count = 3
@@ -68,16 +72,16 @@ class UI:
         icon_height = self.starcoin_icon.get_height()
         total_icons = TOTAL_STARCOIN
 
-        # Hintergrund-Panel berechnen
+        # Calculate background rect
         total_width = total_icons * icon_width + (total_icons - 1) * spacing
         total_height = icon_height
         bg_rect = pygame.Rect(20, 30, total_width + 2 * padding_x, total_height + 2 * padding_y) # background rect
 
-        # Panel zeichnen
+        # Draw panel
         pygame.draw.rect(self.surface, (240, 240, 240), bg_rect, border_radius=6)
         pygame.draw.rect(self.surface, (0, 0, 0), bg_rect, 2, border_radius=6)
 
-        # Icons nebeneinander
+        # Draw icons next to each other
         start_pos_x = bg_rect.left + padding_x # Starting position for icon x
         start_pos_y = bg_rect.top + padding_y # Starting position for icon y
         for i in range(total_icons):
@@ -85,8 +89,8 @@ class UI:
             self.surface.blit(icon, (start_pos_x, start_pos_y))
             start_pos_x += icon_width + spacing
 
-    def draw(self):
-        self.draw_height()
+    def draw(self, elapsed_time):
+        self.draw_timer(elapsed_time)
         self.draw_starcoins_row()
         if self.enable_extensions:
             self.draw_inventory()

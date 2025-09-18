@@ -15,6 +15,15 @@ class UI:
         self.starcoin_icon_empty = self.starcoin_icon.copy()
         self.starcoin_icon_empty.fill((200, 200, 200, 150), special_flags=pygame.BLEND_RGBA_MULT)
 
+        def load(path, scale): return pygame.transform.smoothscale(pygame.image.load(join("images", "keys", path)).convert_alpha(), scale)
+
+        self.key_icon_size = (20, 20)
+        self.key_icons = {
+            "1": load("key_1.png", self.key_icon_size),
+            "2": load("key_2.png", self.key_icon_size),
+            "3": load("key_3.png", self.key_icon_size)
+        }
+
     def draw_height(self): #!TODO: Will ich das? Höhe ungleich Höhenlayer, da anders gezählt
         height_value = int((WINDOW_WIDTH - TILE_SIZE) - self.player.hitbox.bottom)
         text_surface = self.font.render(f"Height: {int(height_value / 64)}", True, (0,0,0)) 
@@ -38,9 +47,18 @@ class UI:
                 icon = pygame.transform.smoothscale(item.image, (40,40))
                 self.surface.blit(icon, rect.inflate(-8,-8).topleft)
 
+            # Highlight selected slot
             if i == self.player.selected_item:
                 pygame.draw.rect(self.surface, (255,215,0), rect, 3)
-
+            
+            # Draw key icon above slot
+            num = str(i + 1)
+            key_img = self.key_icons.get(num)
+            if key_img:
+                key_rect = key_img.get_rect(midbottom=(rect.centerx, rect.top + 2))
+                bg = pygame.Rect(0, 0, key_rect.width + 6 , key_rect.height + 4)
+                bg.center = (key_rect.centerx, key_rect.centery - 1)
+                self.surface.blit(key_img, key_rect)
 
     def draw_starcoins_row(self):
         # Layout

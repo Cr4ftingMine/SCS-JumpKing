@@ -151,18 +151,18 @@ class Game:
         # Checkpoints
         checkpoint_hits = pygame.sprite.spritecollide(self.player, self.map.checkpoint_sprites, dokill=False)
         for checkpoint in checkpoint_hits:
-            print("kollision checkpoint")
+            #print("kollision checkpoint")
             checkpoint.set_active()
             self.player.last_checkpoint = checkpoint
 
         # Star Coin
         starcoin_hits = pygame.sprite.spritecollide(self.player, self.map.starcoin_sprites, dokill=True)
         for starcoin in starcoin_hits:
-            print("Sternenmünze Kollision")
+            #print("Sternenmünze Kollision")
             if hasattr(starcoin, "on_pickup"):
                 starcoin.on_pickup(self.player)
                 self.starcoin_sound.play()
-            print(self.player.star_coins)
+            #print(self.player.star_coins)
 
         #self.map.draw(self.display_surface, self.camera)
         self.map.draw(self.game_surface, self.camera)

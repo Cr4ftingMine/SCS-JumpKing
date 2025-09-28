@@ -192,7 +192,7 @@ class Menu:
             self.screen.blit(time_surf, time_rect.topleft)
 
         # Footer
-        footer = "ENTER starten • ESC zurück •  ←/→ toggelt Extension"
+        footer = "ENTER starten • ESC zurück •  Links/Rechts toggelt Extension"
         footer_surface = self.font_small.render(footer, True, (60,60,60)) # Creates surface with text
         self.screen.blit(footer_surface, footer_surface.get_rect(center=(self.screen.get_width()//2, panel_rect.bottom - 24)))
 

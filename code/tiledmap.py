@@ -65,7 +65,7 @@ class TiledMap:
                                 case "lever":
                                     Lever(pos, action_image, self.actionblock_sprites, self.actionblock_sprites)
                                 case _:
-                                    print("Unbekannter Action Block: ", action_blocktype)
+                                    pass
 
                             # Items
                             item_type = props.get("item")

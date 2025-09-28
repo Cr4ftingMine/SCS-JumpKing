@@ -229,8 +229,3 @@ class Menu:
 
             pygame.display.flip()
         pygame.quit()
-
-
-
-if __name__ == "__main__":
-    Menu().run()

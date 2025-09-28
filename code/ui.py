@@ -8,6 +8,10 @@ class UI:
         self.font = pygame.font.Font(None, 36)
         self.small_font = pygame.font.Font(None, 16)
 
+        # Effects
+        self._effect_totals = {}
+
+        # Inventory
         self.inventory_slots = []
 
         # Load of Icon 
@@ -64,6 +68,7 @@ class UI:
                 bg.center = (key_rect.centerx, key_rect.centery - 1)
                 self.surface.blit(key_img, key_rect)
 
+    # Draw the star coin row (top-left corner)
     def draw_starcoins_row(self):
         # Layout
         padding_x, padding_y = 8, 6 # Space between border and icon
@@ -89,8 +94,57 @@ class UI:
             self.surface.blit(icon, (start_pos_x, start_pos_y))
             start_pos_x += icon_width + spacing
 
+    # Draw active effects with timers (if any)
+    def draw_effects(self):
+        # Collect active effects 
+        effects = []
+        if getattr(self.player, "jump_boost_timer", 0) > 0:
+            effects.append(("Jump Boost", self.player.jump_boost_timer))
+        if getattr(self.player, "slowfall_timer", 0) > 0:
+            effects.append(("Slowfall", self.player.slowfall_timer))
+
+        if not effects:
+            return
+
+        # Collect total time, if remaining time is higher than before (=new effect)
+        for name, remaining in effects:
+            prev_total = self._effect_totals.get(name, 0)
+            if remaining > prev_total:
+                self._effect_totals[name] = remaining
+
+        # Draw
+        font = getattr(self, "small_font", None) or pygame.font.Font(None, 20)
+        x, y0 = 20, 72          # Under starcoin row
+        h_badge, h_bar, gap = 22, 6, 6 
+
+        for i, (label, remaining) in enumerate(effects):
+            # Use stored total time for progress calculation
+            total = max(self._effect_totals.get(label, remaining), 0.0001)  # Fallback to avoid div by zero
+            y = y0 + i * (h_badge + h_bar + gap)
+
+            # Render text
+            text = font.render(f"{label}  {remaining:0.1f}s", True, (0, 0, 0))
+            w = text.get_width() + 24
+            badge = pygame.Rect(x, y, w, h_badge)
+            bar_background = pygame.Rect(x, y + h_badge + 2, w, h_bar)
+
+            # Draw badge, background and border
+            pygame.draw.rect(self.surface, (240, 240, 240), badge, border_radius=8)
+            pygame.draw.rect(self.surface, (0, 0, 0), badge, 1, border_radius=8)
+            self.surface.blit(text, (badge.x + 12, badge.y + (h_badge - text.get_height()) // 2))
+
+            # Draw progr
+            pct = max(0.0, min(1.0, remaining / total))
+            bar_foreground = pygame.Rect(bar_background.x, bar_background.y, int(bar_background.w * pct), h_bar)
+            pygame.draw.rect(self.surface, (220, 220, 220), bar_background, border_radius=3)
+            pygame.draw.rect(self.surface, (80, 200, 120), bar_foreground, border_radius=3)
+            pygame.draw.rect(self.surface, (0, 0, 0), bar_background, 1, border_radius=3)
+
+
+
     def draw(self, elapsed_time):
         self.draw_timer(elapsed_time)
         self.draw_starcoins_row()
         if self.enable_extensions:
             self.draw_inventory()
+            self.draw_effects()

@@ -3,6 +3,7 @@ from pytmx.util_pygame import load_pygame
 
 from sprites import *
 
+# Tiled Map handling
 class TiledMap:
     def __init__(self, filename, enable_extensions):
         self.tmx_data = load_pygame(filename)
@@ -14,6 +15,7 @@ class TiledMap:
         #print(f"width: {self.width}, height: {self.height}")
         #print(self.layers)
 
+        # Sprite Groups for different types of sprites
         self.collision_sprites = pygame.sprite.Group()
         self.slope_sprites = pygame.sprite.Group()
         self.slippery_sprites = pygame.sprite.Group()
@@ -22,9 +24,9 @@ class TiledMap:
         self.actionblock_sprites = pygame.sprite.Group()
         self.starcoin_sprites = pygame.sprite.Group()
 
-
+        
         offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
-        for layer in self.tmx_data.visible_layers:
+        for layer in self.tmx_data.visible_layers: # Loop through all layers in the Tiled map
             if hasattr(layer, 'tiles'):
                 for x, y, gid in layer:
                     props = self.tmx_data.get_tile_properties_by_gid(gid)
@@ -68,7 +70,7 @@ class TiledMap:
                             # Items
                             item_type = props.get("item")
                             if item_type:
-                                # Items are positioned by their center (Item.rect uses center) #!TODO: Erklärung
+                                # Items are positioned by their center (Item.rect uses center)
                                 cx = pos[0] + TILE_SIZE / 2
                                 cy = pos[1] + TILE_SIZE / 2
                                 #print(f"cx: {cx}, x: {x * TILE_SIZE} - cy: {cy}, y:{y * TILE_SIZE}")
@@ -81,18 +83,15 @@ class TiledMap:
                                         JumpBoost((cx, cy), item_image, self.item_sprites)
                                     case "Slowfall":
                                         Slowfall((cx, cy), item_image, self.item_sprites)
-                                    case "DoubleJump":
-                                        DoubleJump((cx, cy), item_image, self.item_sprites)
-                                    case "WallGrip":
-                                        WallGrip((cx, cy), item_image, self.item_sprites)
                                     case _:
                                         print("Unbekanntes Item: ", item_type)
 
-        print("Slopes: ", len(self.slope_sprites))
-        print("Eisflächen: ", len(self.slippery_sprites))
-        print("Checkpoints: ", len(self.checkpoint_sprites))
-        print("ActionBlock: ", len(self.actionblock_sprites))
-        print("StarCoin: ", len(self.starcoin_sprites))
+        # Debug output
+        # print("Slopes: ", len(self.slope_sprites))
+        # print("Eisflächen: ", len(self.slippery_sprites))
+        # print("Checkpoints: ", len(self.checkpoint_sprites))
+        # print("ActionBlock: ", len(self.actionblock_sprites))
+        # print("StarCoin: ", len(self.starcoin_sprites))
 
         #Map-Border
         left_wall_x = -TILE_SIZE
@@ -102,24 +101,9 @@ class TiledMap:
 
         CollisionSprite((left_wall_x, wall_y), (TILE_SIZE, wall_height), self.collision_sprites)
         CollisionSprite((right_wall_x, wall_y), (TILE_SIZE, wall_height), self.collision_sprites)
-
-
         #print(f"Loaded {len(self.collidable_rects)} collidable tiles.")
 
-
-
-    # def draw(self, surface):
-    #     #TODO: Kamera einbauen
-    #     offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
-
-    #     for layer in self.tmx_data.visible_layers:
-    #         if hasattr(layer, 'tiles'):
-    #             for x, y, image in layer.tiles():
-    #                 if image:
-    #                     screen_x = x * TILE_SIZE
-    #                     screen_y = y * TILE_SIZE + offset_y
-    #                     surface.blit(image, (screen_x, screen_y))
-
+    # Draw the map onto a surface 
     def draw(self, surface, camera):
         offset_y = -149 * TILE_SIZE + WINDOW_HEIGHT - 64
         
@@ -132,8 +116,3 @@ class TiledMap:
                         screen_x = world_x
                         screen_y = world_y + camera.offset.y
                         surface.blit(image, (screen_x, screen_y))
-
-
-    def update(self, dt):
-        # Update the map state if necessary
-        pass

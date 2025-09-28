@@ -69,7 +69,7 @@ class Game:
         
         
         # Player II
-        self.all_sprites.add(self.player) #!TODO: Platzänderung wegen Zeichenreichenfolge
+        self.all_sprites.add(self.player)
 
         # Sounds
         self.starcoin_sound = pygame.mixer.Sound(join("audio", "starcoin.wav"))
@@ -99,14 +99,24 @@ class Game:
         
         level_name = splitext(basename(self.level_path))[0] if self.level_path else "unknown"
 
-        # Keep level highscore 
-        prev = int(data.get(level_name, 0))
-        best = max(prev, int(self.player.star_coins))
-        data[level_name] = best
+        # previous data
+        prev_data = data.get(level_name, {"star_coins": 0, "best_time": None})
+        prev_star_coins = int(prev_data.get("star_coins", 0))
+        prev_best_time = prev_data.get("best_time", None)
 
-        # Save back to json or create json
-        with open(SCORE_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        # current data
+        current_star_coins = int(self.player.star_coins)
+        current_time = int(self.level_time)
+
+        # Only safe if improved (more star coins or better time) 
+        # star coins and time are connected, highscore only updates if one of both is better
+        improved = (current_star_coins > prev_star_coins) or (prev_best_time is None) or (current_time < prev_best_time)
+
+        if improved:
+            data[level_name] = {"star_coins": current_star_coins, "best_time": current_time}
+            # Save back to json or create json
+            with open(SCORE_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
 
     def run_game(self, dt):
         # Event handling

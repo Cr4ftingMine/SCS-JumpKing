@@ -1,13 +1,13 @@
 from settings import *
-import math
+
+# Collision Sprite (used for walls, floors, ceilings to check collision with player)
 class CollisionSprite(pygame.sprite.Sprite):
     def __init__(self, pos, size, *groups):
         super().__init__(*groups)
         self.image = pygame.Surface(size, pygame.SRCALPHA)
-        # self.image.fill("red")  # sichtbar zum Debuggen
-        # self.image.set_alpha(0)  # unsichtbar im Spiel
         self.rect = self.image.get_frect(topleft=pos)
 
+# Slope Sprite (used for sloped surfaces (ramps) to check collision with player)
 class SlopeSprite(pygame.sprite.Sprite):
     def __init__(self,pos, image: pygame.Surface, *groups):
         super().__init__(*groups)
@@ -34,12 +34,14 @@ class SlopeSprite(pygame.sprite.Sprite):
         y_local = self.heights[x_local]
         return self.rect.top + y_local
     
+# Slippery Sprite (used for ice surfaces to check collision with player)
 class SlipperySprite(pygame.sprite.Sprite):
     def __init__(self, pos, size, *groups):
         super().__init__(*groups)
         self.image = pygame.Surface(size)
         self.rect = self.image.get_frect(topleft=pos)
 
+# Base class for all items (can be picked up and used by player)
 class Item(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, name, *groups):
         super().__init__(*groups)
@@ -54,16 +56,17 @@ class Item(pygame.sprite.Sprite):
     def use(self,player):
         pass
 
+# Teleport Stone Item (teleports player on use upward)
 class TeleportStone(Item):
     def __init__(self, pos, target_pos=None, image: pygame.Surface = None, *groups):
         super().__init__(pos, image, "Teleportstein", *groups)
         self.target_pos = target_pos
 
     def use(self, player):
-        print("Hier soll Magie passieren")
-        player.hitbox.y -= 1000
+        player.hitbox.y -= 200
         player.rect.midbottom = player.hitbox.midbottom
 
+# Jump Boost Item (increases max jump power for a duration)
 class JumpBoost(Item):
     def __init__(self, pos, image: pygame.Surface = None, *groups):
         super().__init__(pos, image, "JumpBoost", *groups)
@@ -71,11 +74,11 @@ class JumpBoost(Item):
         self.jump_boost_duration = 5
 
     def use(self, player):
-        print("Jump Boost")
         player.max_jump_power = player.max_jump_power + self.jump_boost_amount
         player.jump_boost_timer = self.jump_boost_duration
         print(f"Jump Boost aktiviert: {player.max_jump_power} für {self.jump_boost_duration} Sekunden!")
 
+# Slowfall Item (reduces gravity effect for a duration)
 class Slowfall(Item):
     def __init__(self, pos, image: pygame.Surface = None, *groups):
         super().__init__(pos, image, "Slowfall", *groups)
@@ -83,25 +86,11 @@ class Slowfall(Item):
         self.slowfall_duration = 5
     
     def use(self, player):
-        print("Slowfall")
         player.slowfall_factor = self.slowfall_factor
         player.slowfall_timer = self.slowfall_duration
         print(f"Slowfall aktiviert: {self.slowfall_factor} für {self.slowfall_duration} Sekunden!")
 
-class DoubleJump(Item):
-    def __init__(self, pos, image: pygame.Surface = None, *groups):
-        super().__init__(pos, image, "DoubleJump", *groups)
-
-    def use(self, player):
-        print("Double Jump")
-
-class WallGrip(Item):
-    def __init__(self, pos, image: pygame.Surface = None, *groups):
-        super().__init__(pos, image, "WallGrip", *groups)
-    
-    def use(self, player):
-        print("Wall Grip")
-
+# Star Coin (collectible item that increases player's star coin count -> highscore)
 class StarCoin(Item):
     def __init__(self, pos, image:pygame.Surface = None, *groups):
         super().__init__(pos, image, "StarCoin", *groups)
@@ -111,8 +100,8 @@ class StarCoin(Item):
     
     def on_pickup(self, player):
         player.star_coins += 1
-        
 
+# Checkpoint (saves player's respawn position when activated, only one can be active at a time, changes color when active)
 class Checkpoint(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, group_all, *groups):
         super().__init__(*groups)
@@ -138,12 +127,14 @@ class Checkpoint(pygame.sprite.Sprite):
     def get_spawnpoint(self):
         return self.rect.midbottom
 
+# Base class for action blocks (can be interacted with by player, e.g. lever, disappearing block, end door)
 class ActionBlock(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, *groups):
         super().__init__(*groups)
         self.image = image.convert_alpha()
         self.rect = self.image.get_frect(topleft=pos)
 
+# Disappearing Block (can be toggled visible/invisible by lever, has collision when visible)
 class DisappearingBlock(ActionBlock):
     def __init__(self, pos, image: pygame.Surface, collision_group = None, start_visible = True, *groups):
         super().__init__(pos, image, *groups)
@@ -163,28 +154,26 @@ class DisappearingBlock(ActionBlock):
         else:
             self.collision_group.remove(self)
 
+# Lever (can be interacted with by player, toggles state and affects target group of action blocks)
 class Lever(ActionBlock):
     def __init__(self, pos, image: pygame.Surface, target_group: None, *groups):
         super().__init__(pos, image, *groups)
         self.image_off = self.image
         self.image_on = pygame.image.load(join("images", "tiles", "lever_right.png")).convert_alpha()
+        self.flip_sound = pygame.mixer.Sound(join("audio", "switch29.ogg"))
+        self.flip_sound.set_volume(0.1)
         self.target_group = target_group
         self.state_on = False
 
-    def interact(self): #!TODO: Player wird benötigt für EndDoor aber nicht für Lever, andere Lösung?
+    def interact(self):
         self.state_on = not self.state_on
         self.image = self.image_on if self.state_on else self.image_off
+        self.flip_sound.play()
         for block in self.target_group:
             if hasattr(block, "set_visible"):
                 block.set_visible(not self.state_on)
 
-# class Key (ActionBlock):
-#     def __init__(self, pos, image: pygame.Surface, *groups):
-#         super().__init__(pos, image, *groups)
-    
-#     def on_pickup(self, player):
-#         player.end_key += 1
-
+# End Door (can be interacted with by player when open, triggers game win event)
 class EndDoor (ActionBlock):
     def __init__(self, pos, image: pygame.Surface, *groups):
         super().__init__(pos, image, *groups)

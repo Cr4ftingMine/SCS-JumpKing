@@ -16,12 +16,12 @@ class Menu:
         self.font = pygame.font.SysFont(None, 40)
         self.font_small = pygame.font.SysFont(None, 26)
 
-        # Zustände
+        # States
         self.menu_mode = "main" # "main" or "levels" 
         self.running = True
         self.enable_extensions = True 
 
-        # Hauptmenü
+        # Main menu
         self.main_menu = None
         self.main_menu_selected = 0
 
@@ -56,9 +56,11 @@ class Menu:
                 with open(SCORE_FILE, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 known = {level["name"] for level in self.levels}
-                for k, v in data.items():
-                    if k in known:
-                        self.scores[k] = int(v)
+                for level_name in known:
+                    entry = data.get(level_name, {})
+                    star_coins = entry.get("star_coins", 0)
+                    best_time = entry.get("best_time", None)
+                    self.scores[level_name] = {"star_coins": star_coins, "best_time": best_time}
             except Exception:
                 self.scores = {} # Fallback if error: no scores
     
@@ -140,18 +142,24 @@ class Menu:
 
         # Column headers (left = level ; right = score)
         left_column = panel_rect.left + 120
+        mid_column = panel_rect.centerx
         right_column = panel_rect.right - 120
         header_y = y_top + 20 # Y-position of left- and right-header
+
         left_header = self.font_small.render("Level", True, (60, 60, 60))
-        right_header = self.font_small.render("Score", True, (60, 60, 60))
+        mid_header = self.font_small.render("Star Coins", True, (60, 60, 60))
+        right_header = self.font_small.render("Best Time", True, (60, 60, 60))
+        
         self.screen.blit(left_header, (left_column, header_y))
-        self.screen.blit(right_header, (right_column, header_y))
+        self.screen.blit(mid_header,  (mid_column - mid_header.get_width() // 2, header_y))
+        self.screen.blit(right_header, (right_column - right_header.get_width(), header_y))
 
         # Level list 
         start_level_row_y = header_y + 30 # start drawing 30px below header
 
         for i, lvl in enumerate(self.levels):
             level_row_y = start_level_row_y + i * LEVEL_ROW_H
+
             # Highlight for currently selected row
             is_selected = (i == self.level_selected)
             row_rect = pygame.Rect(panel_rect.left+40, level_row_y-6, panel_rect.width-80, LEVEL_ROW_H) # rect for the whole row
@@ -162,11 +170,26 @@ class Menu:
             name_lvl = self.font.render(lvl["name"], True, (0,0,0))
             self.screen.blit(name_lvl, (left_column, level_row_y))
 
-            # right column (score)
-            score_value = self.scores.get(lvl["name"], "-") # Get Value or default "-"
-            score_surface = self.font.render(str(score_value), True, (0,0,0)) # Creates surface with text
-            score_rect = score_surface.get_rect(right=panel_rect.right - 120, centery=level_row_y + name_lvl.get_height()//2)
-            self.screen.blit(score_surface, score_rect.topleft)
+            # Werte aus Score-Dict
+            entry = self.scores.get(lvl["name"], {"star_coins": 0, "best_time": None})
+            star_coins = entry["star_coins"]
+            best_time  = entry["best_time"]
+
+            # middle column (star coins)
+            star_coin_surf = self.font.render(str(star_coins), True, (0, 0, 0))
+            star_coin_rect = star_coin_surf.get_rect(centerx=mid_column, centery=level_row_y + name_lvl.get_height() // 2)
+            self.screen.blit(star_coin_surf, star_coin_rect.topleft)
+
+            # right column (best time, MM:SS)
+            if isinstance(best_time, int):
+                minutes = best_time // 60
+                seconds = best_time % 60
+                time_str = f"{minutes:02d}:{seconds:02d}"
+            else:
+                time_str = "-"
+            time_surf = self.font.render(time_str, True, (0, 0, 0))
+            time_rect = time_surf.get_rect(right=right_column, centery=level_row_y + name_lvl.get_height() // 2)
+            self.screen.blit(time_surf, time_rect.topleft)
 
         # Footer
         footer = "ENTER starten • ESC zurück •  ←/→ toggelt Extension"

@@ -1,4 +1,3 @@
-# winscreen.py
 from settings import *
 
 class WinScreen:

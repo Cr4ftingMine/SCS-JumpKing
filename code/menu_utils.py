@@ -1,7 +1,5 @@
 from settings import *
 
-#!TODO: Umbau zur Font - Übergabe? Besserer Weg? Cleaner?
-
 def draw_panel(display_surface, font_big, title):
     window_width, window_heigth = display_surface.get_size()
     rect = pygame.Rect(PANEL_MARGIN, PANEL_MARGIN, window_width - 2 * PANEL_MARGIN, window_heigth - 2 * PANEL_MARGIN)

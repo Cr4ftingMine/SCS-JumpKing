@@ -78,8 +78,8 @@ class Player(pygame.sprite.Sprite):
             "duck": [load("player_duck.png")],
             "jump": [load("player_jump.png")]
         }
-
-    # !TODO Arbeitet an Events und steuert diese 
+    
+    # Event handler
     def event_handler(self, event): 
         if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
             self.release_jump()
@@ -161,7 +161,7 @@ class Player(pygame.sprite.Sprite):
         # Reconnect Renderrect and Colliderect -> Movement from Renderrect
         self.rect.midbottom = self.hitbox.midbottom 
 
-
+    # Release the jump (on keyup) and apply velocity
     def release_jump(self):
         if self.charging_jump:
             self.velocity_y = -self.jump_power
@@ -171,6 +171,7 @@ class Player(pygame.sprite.Sprite):
             self.on_ground = False 
             self.jump_sound.play()
 
+    # Collision Handlers
     def handle_collisions(self,direction):
         for sprite in self.collision_sprites:
             if sprite.rect.colliderect(self.hitbox):
@@ -184,7 +185,6 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.top = sprite.rect.bottom
                         self.velocity_y = 0
 
-#!TODO: Doppelbounce möglich? Im Spiel auch unterstützt?
                 elif direction == "horizontal":
                     if not self.on_ground:
                         move_dir = self.velocity_x
@@ -209,6 +209,7 @@ class Player(pygame.sprite.Sprite):
                     #if not self.on_ground:
                             #self.slide_x = - self.slide_x
 
+    # Slope Collision Handler
     def handle_slope_collisions(self):
         for slope in self.slope_sprites:
             if slope.rect.colliderect(self.hitbox):
@@ -226,6 +227,7 @@ class Player(pygame.sprite.Sprite):
                     downhill = 1 if y_r > y_l else -1 if y_r < y_l else 0 
                     self.velocity_x = downhill * SLIDE_SPEED
 
+    # Collision Handler for slippery Tiles (ice)
     def handle_slippery_collisions(self):
         # Sensor underneath hitbox (2px drunter) -> Keine Kollision mit Eisfläche, da handle Collision bereits die Kollision verhindert
         foot = self.hitbox.copy()
@@ -239,6 +241,7 @@ class Player(pygame.sprite.Sprite):
                 self.on_slippery = True
                 return
 
+    # Animation for player 
     def animate(self, dt):
         if not self.on_ground:
             self.state = "jump"
@@ -263,6 +266,7 @@ class Player(pygame.sprite.Sprite):
         
         self.image = pygame.transform.flip(self.image, True, False) if flip else self.image
 
+    # Draw the jump charge bar above the player
     def draw_charge_bar(self, surface, camera):
         # Show only when charging or midjump
         if not self.charging_jump and self.jump_power <= 0:
@@ -286,6 +290,7 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(surface, fg_color, fill_rect, border_radius=3) # Filling
         pygame.draw.rect(surface, border_color, bg_rect, 1, border_radius=3) # Border
 
+    # Update active buffs (jumpboost, slowfall)
     def update_buffs(self, dt):
         # JumpBoost
         if self.jump_boost_timer > 0: 
@@ -299,7 +304,8 @@ class Player(pygame.sprite.Sprite):
             self.slowfall_timer -= dt
             if self.slowfall_timer <= 0:
                 print("Slowfall deaktiviert")
-
+    
+    # Respawn to last checkpoint (if any and key pressed)
     def respawn_to_last_checkpoint(self):
         checkpoint = self.last_checkpoint
         if checkpoint:

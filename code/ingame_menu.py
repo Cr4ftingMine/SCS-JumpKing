@@ -16,11 +16,11 @@ class ingameMenu:
         self.selected = 0 # Index of selected button (0 = resume, 1 = quit)
 
         # Sound
-        self.sound_select = pygame.mixer.Sound(join("audio", "menu_click.ogg"))
+        self.sound_select = pygame.mixer.Sound(join(AUDIO_DIR, "menu_click.ogg"))
         self.sound_select.set_volume(0.008)
 
         # Key-Icons
-        def load(path, scale): return pygame.transform.smoothscale(pygame.image.load(join("images", "keys", path)).convert_alpha(), scale)
+        def load(path, scale): return pygame.transform.smoothscale(pygame.image.load(join(IMAGE_DIR, "keys", path)).convert_alpha(), scale)
 
         self.key_icon_size = (32, 32)
         self.key_icons = {

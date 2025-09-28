@@ -106,7 +106,7 @@ class Checkpoint(pygame.sprite.Sprite):
     def __init__(self, pos, image: pygame.Surface, group_all, *groups):
         super().__init__(*groups)
         self.image_red = image.convert_alpha()
-        self.image_green = pygame.image.load(join("images", "tiles", "checkpoint_green.png")).convert_alpha()
+        self.image_green = pygame.image.load(join(IMAGE_DIR, "tiles", "checkpoint_green.png")).convert_alpha()
         self.image = self.image_red
         self.rect = self.image.get_frect(topleft=pos)
 
@@ -159,8 +159,8 @@ class Lever(ActionBlock):
     def __init__(self, pos, image: pygame.Surface, target_group: None, *groups):
         super().__init__(pos, image, *groups)
         self.image_off = self.image
-        self.image_on = pygame.image.load(join("images", "tiles", "lever_right.png")).convert_alpha()
-        self.flip_sound = pygame.mixer.Sound(join("audio", "switch29.ogg"))
+        self.image_on = pygame.image.load(join(IMAGE_DIR, "tiles", "lever_right.png")).convert_alpha()
+        self.flip_sound = pygame.mixer.Sound(join(AUDIO_DIR, "switch29.ogg"))
         self.flip_sound.set_volume(0.1)
         self.target_group = target_group
         self.state_on = False
@@ -178,13 +178,13 @@ class EndDoor (ActionBlock):
     def __init__(self, pos, image: pygame.Surface, *groups):
         super().__init__(pos, image, *groups)
         self.closed_image = self.image
-        self.open_image = pygame.image.load(join("images", "tiles", "enddoor_open.png")).convert_alpha()
+        self.open_image = pygame.image.load(join(IMAGE_DIR, "tiles", "enddoor_open.png")).convert_alpha()
         self.is_open = False
     
     def interact(self):
         if not self.is_open:
             self.image = self.open_image
             self.is_open = True
-            print(self.is_open)
-            print("Enddoor geöffnet!")
+            #print(self.is_open)
+            #print("Enddoor geöffnet!")
             pygame.event.post(pygame.event.Event(GAME_WON)) # Trigger Win Screen + save?

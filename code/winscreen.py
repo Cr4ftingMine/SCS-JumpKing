@@ -6,7 +6,7 @@ class WinScreen:
         self.font_big = pygame.font.SysFont(None, 72)
         self.font = pygame.font.SysFont(None, 28)
 
-        self.win_sound = pygame.mixer.Sound(join("audio", "win_sound.wav"))
+        self.win_sound = pygame.mixer.Sound(join(AUDIO_DIR, "win_sound.wav"))
         self.win_sound.set_volume(0.008)
 
     def run(self, game_surface_for_background=None, duration_ms=5000):

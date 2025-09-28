@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_boost_timer = 0 # Remaining time of Jumpboost
 
         # Jump Sound
-        self.jump_sound = pygame.mixer.Sound(join("audio", "jump_sound.wav"))
+        self.jump_sound = pygame.mixer.Sound(join(AUDIO_DIR, "jump_sound.wav"))
         self.jump_sound.set_volume(0.008)
 
         # Gravity
@@ -70,7 +70,7 @@ class Player(pygame.sprite.Sprite):
         self.actionblock_sprites = actionblock_sprites
 
     def load_images(self):
-        def load(path): return pygame.transform.smoothscale(pygame.image.load(join("images", "player", path)).convert_alpha(), self.scale)
+        def load(path): return pygame.transform.smoothscale(pygame.image.load(join(IMAGE_DIR, "player", path)).convert_alpha(), self.scale)
 
         self.frames = {
             "idle": [load("player.png")],

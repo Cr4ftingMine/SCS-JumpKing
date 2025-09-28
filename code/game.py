@@ -72,9 +72,9 @@ class Game:
         self.all_sprites.add(self.player)
 
         # Sounds
-        self.starcoin_sound = pygame.mixer.Sound(join("audio", "starcoin.wav"))
+        self.starcoin_sound = pygame.mixer.Sound(join(AUDIO_DIR, "starcoin.wav"))
         self.starcoin_sound.set_volume(0.008)
-        self.item_pickup_sound = pygame.mixer.Sound(join("audio", "item_pickup.wav"))
+        self.item_pickup_sound = pygame.mixer.Sound(join(AUDIO_DIR, "item_pickup.wav"))
         self.item_pickup_sound.set_volume(0.008)
         self.checkpoint_sound = None
         
@@ -118,6 +118,7 @@ class Game:
             with open(SCORE_FILE, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
 
+    # Game loop 2
     def run_game(self, dt):
         # Event handling
         for event in pygame.event.get():
@@ -189,7 +190,7 @@ class Game:
 
         pygame.display.flip()
     
-    # Game loop
+    # Game loop 1
     def run(self):
         while self.running:
             dt = self.clock.tick() / 1000 # delta time

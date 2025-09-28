@@ -32,9 +32,9 @@ class Menu:
         self.load_scores()
 
         # Sound
-        self.select_sound = pygame.mixer.Sound(join("audio", "menu_click.ogg"))
+        self.select_sound = pygame.mixer.Sound(join(AUDIO_DIR, "menu_click.ogg"))
         self.select_sound.set_volume(0.008)
-        self.switch_sound = pygame.mixer.Sound(join("audio", "switch29.ogg"))
+        self.switch_sound = pygame.mixer.Sound(join(AUDIO_DIR, "switch29.ogg"))
         self.switch_sound.set_volume(0.008)
 
     def load_levels(self):

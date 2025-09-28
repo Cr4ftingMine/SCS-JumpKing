@@ -44,5 +44,14 @@ GAME_WON = pygame.event.custom_type()
 WINSCREEN_DURATION_MS = 4000
 
 # Score json
-DATA_DIR = join(dirname(__file__), "../data")
-SCORE_FILE = join(DATA_DIR, "scores.json")
+#DATA_DIR = join(dirname(__file__), "../data")
+#SCORE_FILE = join(DATA_DIR, "scores.json")
+
+# Project path
+BASE_DIR = dirname(__file__)
+PROJECT_DIR = dirname(BASE_DIR)
+
+AUDIO_DIR = join(PROJECT_DIR, "audio")
+IMAGE_DIR = join(PROJECT_DIR, "images")
+DATA_DIR = join(PROJECT_DIR, "data")
+SCORE_FILE = join(DATA_DIR, "scores.json")#

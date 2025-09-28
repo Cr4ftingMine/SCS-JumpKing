@@ -15,11 +15,11 @@ class UI:
         self.inventory_slots = []
 
         # Load of Icon 
-        self.starcoin_icon = pygame.transform.smoothscale(pygame.image.load(join("images", "tiles", "starcoin.png")).convert_alpha(),(28, 28))
+        self.starcoin_icon = pygame.transform.smoothscale(pygame.image.load(join(IMAGE_DIR, "tiles", "starcoin.png")).convert_alpha(),(28, 28))
         self.starcoin_icon_empty = self.starcoin_icon.copy()
         self.starcoin_icon_empty.fill((200, 200, 200, 150), special_flags=pygame.BLEND_RGBA_MULT)
 
-        def load(path, scale): return pygame.transform.smoothscale(pygame.image.load(join("images", "keys", path)).convert_alpha(), scale)
+        def load(path, scale): return pygame.transform.smoothscale(pygame.image.load(join(IMAGE_DIR, "keys", path)).convert_alpha(), scale)
 
         self.key_icon_size = (20, 20)
         self.key_icons = {
